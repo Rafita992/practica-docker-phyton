@@ -1,0 +1,34 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Pull repositorio
+        uses: actions/checkout@v4
+
+      - name: Ejecutar tests
+        run: docker build --target test --tag notas-api:test .
+
+  build:
+    runs-on: ubuntu-24.04
+    needs: test
+    if: github.event_name == 'push'
+    steps:
+      - name: Pull repositorio
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build --target production --tag ${{ secrets.DOCKERHUB_USUARIO }}/notas-api:latest .
+
+      - name: Login Docker Hub
+        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USUARIO }} --password-stdin
+
+      - name: Subir imagen Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USUARIO }}/notas-api:latest
