@@ -25,10 +25,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build the Docker image
-        run: docker build --target production --tag ${{ secrets.DOCKERHUB_USUARIO }}/notas-api:latest .
+        run: docker build --target production --tag ${{ secrets.DOCKERHUB_USERNAME }}/notas-api:latest .
 
       - name: Login Docker Hub
-        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USUARIO }} --password-stdin
+        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Subir imagen Docker Hub
-        run: docker push ${{ secrets.DOCKERHUB_USUARIO }}/notas-api:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/notas-api:latest
